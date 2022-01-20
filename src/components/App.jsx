@@ -1,39 +1,52 @@
 import { useEffect, useState } from "react";
 
 function App() {
-  const plates = [25, 20, 15, 10, 5, 2.5, 2, 1.5, 1, 0.5];
+  const plates = [
+    { weight: 25, color: "red", width:110 },
+    { weight: 20, color: "blue", width:100, text:"white"},
+    { weight: 15, color: "yellow", width:85 },
+    { weight: 10, color: "black" , width:75, text:"white"},
+    { weight: 5, color: "green" , width:60 },
+    { weight: 2.5, color: "gray" , width:50},
+    { weight: 2, color: "gray" , width:48},
+    { weight: 1.5, color: "gray", width:46 },
+    { weight: 1, color: "gray", width:44 },
+    { weight: 0.5, color: "gray" , width:42}
+  ];
 
   const [userInputs, setUserInputs] = useState({
     totalWeight: "",
     barWeight: 20
   });
-  const [disableButton, setDisableButton] = useState(false);
+
   const [platesToUse, setPlatesToUse] = useState([]);
   const [calculated, setCalculated] = useState(false);
 
   useEffect(() => {
-    userInputs.totalWeight - userInputs.barWeight > 0
-      ? setDisableButton(false)
-      : setDisableButton(true);
+    if (userInputs.totalWeight - userInputs.barWeight > 0) {
+      calc()
+    }
+
   }, [userInputs]);
 
-  function calc(e) {
+  function calc() {
     const weightToUse = userInputs.totalWeight - userInputs.barWeight;
     let weightPerSide = weightToUse / 2;
 
     let platesToUse = [];
 
     while (weightPerSide > 0) {
-      const plate = plates.filter((plate) => plate <= weightPerSide)[0];
+      const plate = plates.filter((plate) => plate.weight <= weightPerSide)[0];
+      console.log(plate)
       platesToUse.push(plate);
-      weightPerSide = weightPerSide - plate;
+      weightPerSide = weightPerSide - plate.weight;
     }
 
     setPlatesToUse(platesToUse);
 
     setCalculated(true);
 
-    e.preventDefault();
+
   }
 
   function handleChange(event) {
@@ -44,8 +57,17 @@ function App() {
     setUserInputs((previousValue) => ({ ...userInputs, [name]: value }));
   }
 
-  const rightPart = platesToUse.map((plate) => <div>{plate}</div>);
-  const leftPart = platesToUse.reverse().map((plate) => <div>{plate}</div>);
+  const rightPart = platesToUse.map((plate) => <div className="plate" style={{
+        backgroundColor: plate.color,
+        width:plate.width,
+        color:plate.text
+      }}>{plate.weight}</div>);
+  const leftPart = platesToUse.reverse().map((plate) => <div className="plate" style={{
+        backgroundColor: plate.color,
+            width:plate.width,
+                    color:plate.text
+
+      }}>{plate.weight}</div>);
 
   return (
     <div>
@@ -66,12 +88,12 @@ function App() {
           onChange={handleChange}
           value={userInputs.barWeight}
         ></input>
-        {!disableButton && <button onClick={calc}>Calc</button>}
       </form>
-
+    <div className="result">
       {calculated && leftPart}
-      {calculated && <div>bar</div>}
+      {calculated && <div className="bar"></div>}
       {calculated && rightPart}
+          </div>
     </div>
   );
 }
