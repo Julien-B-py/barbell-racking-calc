@@ -12,6 +12,23 @@ function App() {
   const [platesToUse, setPlatesToUse] = useState([]);
   const [calculated, setCalculated] = useState(false);
 
+  const platesOptions = [25, 20, 15, 10, 5, 2.5, 2, 1.5, 1, 0.5];
+
+  function initAvailablePlates() {
+    const platesObject = {};
+    platesOptions.forEach((element) => (platesObject[element] = true));
+    return platesObject;
+  }
+
+  const [availablePlates, setAvailablePlates] = useState(initAvailablePlates());
+
+  function editAvailablePlates(e) {
+        const choice = e.target.name;
+        setAvailablePlates((previousValue) => {
+          return { ...previousValue, [choice]: !previousValue[choice] };
+        });
+  }
+
   useEffect(() => {
     if (userInputs.totalWeight - userInputs.barWeight > 0) {
       calc();
@@ -19,6 +36,7 @@ function App() {
   }, [userInputs]);
 
   function calc() {
+    console.log("CALC")
     const weightToUse = userInputs.totalWeight - userInputs.barWeight;
     let weightPerSide = weightToUse / 2;
 
@@ -34,6 +52,8 @@ function App() {
       platesToUse.push(plate);
       weightPerSide = weightPerSide - plate.weight;
     }
+
+    console.log(platesToUse);
 
     setPlatesToUse(platesToUse);
 
@@ -75,12 +95,15 @@ function App() {
         onChange={(e) => handleChange(e)}
         totalWeight={userInputs.totalWeight}
         barWeight={userInputs.barWeight}
+        onEditPlates={editAvailablePlates}
+        platesOptions={platesOptions}
+        availablePlates={availablePlates}
       />
 
       <div className="result">
-        {calculated && leftPart}
+        {calculated && <div className="plates">{leftPart}</div>}
         {calculated && <div className="bar"></div>}
-        {calculated && rightPart}
+        {calculated && <div className="plates">{rightPart}</div>}
       </div>
       <footer>©2022, Julien BEAUJOIN</footer>
     </div>
