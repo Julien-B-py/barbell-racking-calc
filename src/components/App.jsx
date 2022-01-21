@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import Plate, {plates} from "./Plate";
+import Plate, { plates } from "./Plate";
 import UserForm from "./UserForm";
 
 function App() {
-
   const [userInputs, setUserInputs] = useState({
     totalWeight: "",
     barWeight: 20
@@ -23,27 +22,35 @@ function App() {
   const [availablePlates, setAvailablePlates] = useState(initAvailablePlates());
 
   function editAvailablePlates(e) {
-        const choice = e.target.name;
-        setAvailablePlates((previousValue) => {
-          return { ...previousValue, [choice]: !previousValue[choice] };
-        });
+    const choice = e.target.name;
+    setAvailablePlates((previousValue) => {
+      return { ...previousValue, [choice]: !previousValue[choice] };
+    });
   }
 
   useEffect(() => {
     if (userInputs.totalWeight - userInputs.barWeight > 0) {
       calc();
     }
-  }, [userInputs]);
+  }, [userInputs, availablePlates]);
 
   function calc() {
-    console.log("CALC")
     const weightToUse = userInputs.totalWeight - userInputs.barWeight;
     let weightPerSide = weightToUse / 2;
 
     let platesToUse = [];
 
+    // Use only plates that are checked
+    const availableOnly = plates.filter((plate) => {
+      if (availablePlates[plate.weight] === true) {
+        return plate.weight;
+      }
+    });
+
     while (weightPerSide > 0) {
-      const plate = plates.filter((plate) => plate.weight <= weightPerSide)[0];
+      const plate = availableOnly.filter(
+        (plate) => plate.weight <= weightPerSide
+      )[0];
 
       if (!plate) {
         return;
@@ -52,8 +59,6 @@ function App() {
       platesToUse.push(plate);
       weightPerSide = weightPerSide - plate.weight;
     }
-
-    console.log(platesToUse);
 
     setPlatesToUse(platesToUse);
 

@@ -1,10 +1,6 @@
 import { useState } from "react";
 
 function UserForm(props) {
-
-
-
-
   return (
     <form>
       <h2>Determine how you need to load your barbell</h2>
