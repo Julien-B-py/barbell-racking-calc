@@ -1,18 +1,8 @@
 import { useEffect, useState } from "react";
+import Plate, {plates} from "./Plate";
+import UserForm from "./UserForm";
 
 function App() {
-  const plates = [
-    { weight: 25, color: "red", width:110 },
-    { weight: 20, color: "blue", width:100, text:"white"},
-    { weight: 15, color: "yellow", width:85 },
-    { weight: 10, color: "black" , width:75, text:"white"},
-    { weight: 5, color: "green" , width:60 },
-    { weight: 2.5, color: "gray" , width:50},
-    { weight: 2, color: "gray" , width:48},
-    { weight: 1.5, color: "gray", width:46 },
-    { weight: 1, color: "gray", width:44 },
-    { weight: 0.5, color: "gray" , width:42}
-  ];
 
   const [userInputs, setUserInputs] = useState({
     totalWeight: "",
@@ -24,9 +14,8 @@ function App() {
 
   useEffect(() => {
     if (userInputs.totalWeight - userInputs.barWeight > 0) {
-      calc()
+      calc();
     }
-
   }, [userInputs]);
 
   function calc() {
@@ -37,7 +26,11 @@ function App() {
 
     while (weightPerSide > 0) {
       const plate = plates.filter((plate) => plate.weight <= weightPerSide)[0];
-      console.log(plate)
+
+      if (!plate) {
+        return;
+      }
+
       platesToUse.push(plate);
       weightPerSide = weightPerSide - plate.weight;
     }
@@ -45,8 +38,6 @@ function App() {
     setPlatesToUse(platesToUse);
 
     setCalculated(true);
-
-
   }
 
   function handleChange(event) {
@@ -57,43 +48,41 @@ function App() {
     setUserInputs((previousValue) => ({ ...userInputs, [name]: value }));
   }
 
-  const rightPart = platesToUse.map((plate) => <div className="plate" style={{
-        backgroundColor: plate.color,
-        width:plate.width,
-        color:plate.text
-      }}>{plate.weight}</div>);
-  const leftPart = platesToUse.reverse().map((plate) => <div className="plate" style={{
-        backgroundColor: plate.color,
-            width:plate.width,
-                    color:plate.text
-
-      }}>{plate.weight}</div>);
+  const rightPart = platesToUse.map((plate) => (
+    <Plate
+      color={plate.color}
+      width={plate.width}
+      text={plate.text}
+      weight={plate.weight}
+    />
+  ));
+  const leftPart = platesToUse
+    .reverse()
+    .map((plate) => (
+      <Plate
+        color={plate.color}
+        width={plate.width}
+        text={plate.text}
+        weight={plate.weight}
+      />
+    ));
 
   return (
-    <div>
-      <form>
-        <label htmlFor="total-weight">Total Weight</label>
-        <input
-          name="totalWeight"
-          id="total-weight"
-          type="number"
-          onChange={handleChange}
-          value={userInputs.totalWeight}
-        ></input>
-        <label htmlFor="bar-weight">Bar Weight</label>
-        <input
-          name="barWeight"
-          id="bar-weight"
-          type="number"
-          onChange={handleChange}
-          value={userInputs.barWeight}
-        ></input>
-      </form>
-    <div className="result">
-      {calculated && leftPart}
-      {calculated && <div className="bar"></div>}
-      {calculated && rightPart}
-          </div>
+    <div className="content">
+      <h1>Barbell racking calc</h1>
+
+      <UserForm
+        onChange={(e) => handleChange(e)}
+        totalWeight={userInputs.totalWeight}
+        barWeight={userInputs.barWeight}
+      />
+
+      <div className="result">
+        {calculated && leftPart}
+        {calculated && <div className="bar"></div>}
+        {calculated && rightPart}
+      </div>
+      <footer>©2022, Julien BEAUJOIN</footer>
     </div>
   );
 }
