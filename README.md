@@ -1,3 +1,13 @@
+# Barbell racking calc
+
+This project was about building my third **React app** to determine how to load a barbell to reach a specific target weight.
+
+User just needs to specify bar weight, total weight and available plates. The app will do the rest.
+
+![alt text](https://i.imgur.com/60Olevc.png)
+
+Deployed and hosted version available here: [https://julien-b-py.github.io/barbell-racking-calc/](https://julien-b-py.github.io/barbell-racking-calc/)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
