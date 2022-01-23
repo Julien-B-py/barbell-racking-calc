@@ -1,0 +1,154 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: min(450px, 90%);
+  background-color: #fff;
+  border-radius: 0.5em;
+  padding: 3rem;
+  margin: 2rem auto;
+  gap: 0.5rem;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 5px 10px 0px;
+}
+
+label {
+  font-size: 0.875rem;
+}
+
+header {
+  background-color: #dc4347;
+  padding: 1rem 2rem;
+  color: white;
+  width: 100%;
+  font-size: clamp(1.25rem, 0.8750rem + 1.6667vw, 2rem);
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+footer {
+  padding: 2rem;
+  color: #777777;
+}
+
+footer a {
+  text-decoration: none;
+  color: #777777;
+}
+
+footer a:hover {
+  text-decoration: none;
+  color: #555555;
+}
+
+.input {
+  display: flex;
+}
+
+.input input {
+  align-self: flex-start;
+  width: 3rem;
+}
+
+.input label {
+  width: 50%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.plates-options {
+  display: flex;
+  gap: 0.5rem 0;
+  flex-wrap: wrap;
+}
+
+.plate-option {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 25%;
+}
+
+.bar {
+  height: 420px;
+  width: 10px;
+  background: linear-gradient(270deg, rgba(171, 171, 173, 1) 0%, rgba(132, 132, 132, 1) 100%)
+}
+
+.right {
+  position: absolute;
+  bottom: 2px;
+  z-index: 10;
+}
+
+.left {
+  position: absolute;
+  top: 2px;
+  z-index: 10;
+}
+
+.plate {
+  border: 1px solid black;
+}
+
+.plates {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.error {
+  color: #dc4347;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.5s ease;
+  flex: 1;
+  justify-content: center;
+  position: relative;
+}
+
+.result .plate div {
+  transition: transform 0.5s ease;
+}
+
+.result .plate {
+  padding: 0.1rem;
+}
+
+@media (min-width: 600px) {
+  .result {
+    transform: rotate(90deg);
+  }
+
+  .result .plate div {
+    transform: rotate(-90deg);
+  }
+}
