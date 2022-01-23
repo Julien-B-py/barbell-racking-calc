@@ -46,6 +46,16 @@ footer {
   color: #777777;
 }
 
+footer a {
+  text-decoration: none;
+  color: #777777;
+}
+
+footer a:hover {
+  text-decoration: none;
+  color: #555555;
+}
+
 .input {
   display: flex;
 }
@@ -70,7 +80,6 @@ footer {
   display: flex;
   gap: 0.5rem 0;
   flex-wrap: wrap;
-
 }
 
 .plate-option {
@@ -78,8 +87,6 @@ footer {
   align-items: center;
   gap: 0.25rem;
   width: 25%;
-
-
 }
 
 .bar {
@@ -91,11 +98,13 @@ footer {
 .right {
   position: absolute;
   bottom: 2px;
+  z-index: 10;
 }
 
 .left {
   position: absolute;
   top: 2px;
+  z-index: 10;
 }
 
 .plate {

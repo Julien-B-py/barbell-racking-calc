@@ -14,7 +14,7 @@ function UserForm(props) {
   // Animate userform on first render
   useLayoutEffect(() => {
     tl.current = gsap
-      .timeline({ defaults: { ease: "Bounce.easeOut" } })
+      .timeline({ defaults: { ease: "Bounce.easeOut" }})
       .from(formRef.current, { autoAlpha: 0, y: "50px", ease: "Expo.easeOut" })
       .from(q("h2"), { y: "-50px", autoAlpha: 0 })
       // Target ALL descendants with the class of .input-row
