@@ -1,3 +1,4 @@
+// Plates array containing predifined plate objects
 const plates = [
   { weight: 25, color: "#931417", width: 110, text: "white" },
   { weight: 20, color: "#0d2b68", width: 100, text: "white" },

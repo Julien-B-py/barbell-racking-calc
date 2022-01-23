@@ -2,8 +2,9 @@ import { gsap } from "gsap";
 import { useRef, useLayoutEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-function UserForm(props) {
+import UserInput from "./UserInput";
 
+function UserForm(props) {
   // Targeting elements
   const formRef = useRef();
   // Targeting descendant elements
@@ -14,7 +15,7 @@ function UserForm(props) {
   // Animate userform on first render
   useLayoutEffect(() => {
     tl.current = gsap
-      .timeline({ defaults: { ease: "Bounce.easeOut" }})
+      .timeline({ defaults: { ease: "Bounce.easeOut" } })
       .from(formRef.current, { autoAlpha: 0, y: "50px", ease: "Expo.easeOut" })
       .from(q("h2"), { y: "-50px", autoAlpha: 0 })
       // Target ALL descendants with the class of .input-row
@@ -35,26 +36,21 @@ function UserForm(props) {
           <p>{props.error}</p>
         </div>
       )}
-      <div className="input input-row">
-        <label htmlFor="total-weight">Target total weight (kg)</label>
-        <input
-          name="totalWeight"
-          id="total-weight"
-          type="number"
-          onChange={props.onChange}
-          value={props.totalWeight}
-        ></input>
-      </div>
-      <div className="input input-row">
-        <label htmlFor="bar-weight">Bar weight (kg)</label>
-        <input
-          name="barWeight"
-          id="bar-weight"
-          type="number"
-          onChange={props.onChange}
-          value={props.barWeight}
-        ></input>
-      </div>
+      <UserInput
+        label="Target total weight (kg)"
+        name="totalWeight"
+        id="total-weight"
+        onChange={props.onChange}
+        value={props.totalWeight}
+      />
+      <UserInput
+        label="Bar weight (kg)"
+        name="barWeight"
+        id="bar-weight"
+        onChange={props.onChange}
+        value={props.barWeight}
+      />
+
       <label className="input input-row">Available plates (kg)</label>
       <div className="plates-options">
         {props.platesOptions.map((number) => (

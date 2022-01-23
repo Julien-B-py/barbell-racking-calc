@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import Plate, { plates } from "./Plate";
 import UserForm from "./UserForm";
+import Barbell from "./Barbell";
 import Footer from "./Footer";
 import Header from "./Header";
 
@@ -45,24 +46,9 @@ function App() {
     });
   }
 
-  // Targeting elements
-  const barRef = useRef();
-  // Targeting descendant elements
-  const q = gsap.utils.selector(barRef);
-  // Store the timeline in a ref
-  const tl = useRef();
-
-  // Animates bar and weights everytime calc function is performed
-  useLayoutEffect(() => {
-    tl.current = gsap
-      .timeline()
-      .from(q(".bar"), { autoAlpha: 0, scale: 0 })
-      .from(q(".right .plate"), { y: "50px", stagger: 0.1 })
-      .from(q(".left .plate"), { y: "-50px", stagger: -0.1 }, "<");
-  }, [calculated]);
-
   // Runs everytime userInputs or availablePlates values are changed
   useEffect(() => {
+    // Prevent decimal numbers
     if (
       userInputs.totalWeight.includes(".") ||
       userInputs.barWeight.includes(".")
@@ -75,20 +61,26 @@ function App() {
     }
   }, [userInputs, availablePlates]);
 
+  // Run calculation to determine which plates the user needs to load to reach target total weight
   function calc() {
     const weightToUse = userInputs.totalWeight - userInputs.barWeight;
+    // Init a value to store the weight that needs to be loaded per side on the barbell
     let weightPerSide = weightToUse / 2;
-
+    // Init an array to store all the plates that needs to be loaded per side on the barbell
     let platesToUse = [];
 
-    // Use only plates that are checked
+    // Create a new array containing only available plates that are checked by the user
     const availableOnly = plates.filter((plate) => {
       if (availablePlates[plate.weight] === true) {
         return plate.weight;
       }
     });
 
+    // While there still is some weight to load on a side of the barbell
     while (weightPerSide > 0) {
+      // Check amongst available plates that are checked by the user
+      // Take all the plates than can fit in weightPerSide value.
+      // Take only the first one (the biggest value)
       const plate = availableOnly.filter(
         (plate) => plate.weight <= weightPerSide
       )[0];
@@ -97,16 +89,20 @@ function App() {
         return;
       }
 
+      // Add the plate to array
       platesToUse.push(plate);
+      // Update weightPerSide to determine whats left to load on the next loop iteration
       weightPerSide = weightPerSide - plate.weight;
     }
-
+    // Store calculated plates array into platesToUse
     setPlatesToUse(platesToUse);
-
+    // Set calc state to true
     setCalculated(true);
   }
 
+  // Updates userInputs state everytime a change is made to any of the inputs
   function handleChange(event) {
+    // Reset calc state to false.
     setCalculated(false);
 
     const { value, name } = event.target;
@@ -138,6 +134,8 @@ function App() {
       />
     ));
 
+  // Puts everything together to render the page
+  // Displays barbell only if calc was performed correctly
   return (
     <div className="content">
       <Header />
@@ -154,11 +152,11 @@ function App() {
       />
 
       {calculated ? (
-        <div className="result" ref={barRef}>
-          <div className="plates left">{leftPart}</div>
-          <div className="bar"></div>
-          <div className="plates right">{rightPart}</div>
-        </div>
+        <Barbell
+          leftPart={leftPart}
+          rightPart={rightPart}
+          calculated={calculated}
+        />
       ) : (
         <div className="result"></div>
       )}
