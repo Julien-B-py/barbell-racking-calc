@@ -11,6 +11,7 @@ const plates = [
   { weight: 0.5, color: "white", width: 42 }
 ];
 
+// Return a plate component with specific style corresponding to his weight
 function Plate(props) {
   return (
     <div

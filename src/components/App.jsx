@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import Plate, { plates } from "./Plate";
 import UserForm from "./UserForm";
 
 function App() {
+  const [error, setError] = useState();
+  const [formInit, setFormInit] = useState(false);
+
+  // Generates a random weight for demonstration
+  const randomWeight = (Math.floor(Math.random() * (120 - 40) ) + 40).toString();
+
   const [userInputs, setUserInputs] = useState({
-    totalWeight: "",
-    barWeight: 20
+    totalWeight: randomWeight,
+    barWeight: "20"
   });
 
   const [platesToUse, setPlatesToUse] = useState([]);
@@ -28,9 +36,17 @@ function App() {
     });
   }
 
+  // Runs everytime userInputs or availablePlates values are changed
   useEffect(() => {
-    if (userInputs.totalWeight - userInputs.barWeight > 0) {
+    if (
+      userInputs.totalWeight.includes(".") ||
+      userInputs.barWeight.includes(".")
+    ) {
+      setError("No decimal please.");
+    } else if (userInputs.totalWeight - userInputs.barWeight >= 0) {
       calc();
+    } else {
+      setError("Target total weight must be higher than bar weight.");
     }
   }, [userInputs, availablePlates]);
 
@@ -75,6 +91,7 @@ function App() {
 
   const rightPart = platesToUse.map((plate) => (
     <Plate
+      key={uuidv4()}
       color={plate.color}
       width={plate.width}
       text={plate.text}
@@ -85,6 +102,7 @@ function App() {
     .reverse()
     .map((plate) => (
       <Plate
+        key={uuidv4()}
         color={plate.color}
         width={plate.width}
         text={plate.text}
@@ -94,7 +112,9 @@ function App() {
 
   return (
     <div className="content">
-      <h1>Barbell racking calc</h1>
+      <header>
+        <i className="fas fa-dumbbell"></i> Barbell racking calc
+      </header>
 
       <UserForm
         onChange={(e) => handleChange(e)}
@@ -103,13 +123,20 @@ function App() {
         onEditPlates={editAvailablePlates}
         platesOptions={platesOptions}
         availablePlates={availablePlates}
+        calculated={calculated}
+        error={error}
       />
 
-      <div className="result">
-        {calculated && <div className="plates">{leftPart}</div>}
-        {calculated && <div className="bar"></div>}
-        {calculated && <div className="plates">{rightPart}</div>}
-      </div>
+      {calculated ? (
+        <div className="result">
+          <div className="plates left">{leftPart}</div>
+          <div className="bar"></div>
+          <div className="plates right">{rightPart}</div>
+        </div>
+      ) : (
+        <div className="result"></div>
+      )}
+
       <footer>©2022, Julien BEAUJOIN</footer>
     </div>
   );
