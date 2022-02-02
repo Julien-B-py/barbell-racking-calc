@@ -16,8 +16,8 @@ function Barbell(props) {
     tl.current = gsap
       .timeline()
       .from(q(".bar"), { autoAlpha: 0, scale: 0 })
-      .from(q(".right .plate"), { y: "50px", stagger: 0.1 })
-      .from(q(".left .plate"), { y: "-50px", stagger: -0.1 }, "<");
+      .from(q(".right .plate"), { xPercent: 200, stagger: 0.1 })
+      .from(q(".left .plate"), { xPercent: -200, stagger: -0.1 }, "<");
   }, [props.calculated]);
 
   return (

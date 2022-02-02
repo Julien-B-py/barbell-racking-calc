@@ -115,7 +115,7 @@ function App() {
     <Plate
       key={uuidv4()}
       color={plate.color}
-      width={plate.width}
+      height={plate.height}
       text={plate.text}
       weight={plate.weight}
     />
@@ -128,7 +128,7 @@ function App() {
       <Plate
         key={uuidv4()}
         color={plate.color}
-        width={plate.width}
+        height={plate.height}
         text={plate.text}
         weight={plate.weight}
       />

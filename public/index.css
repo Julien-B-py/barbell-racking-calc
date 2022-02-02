@@ -90,20 +90,20 @@ footer a:hover {
 }
 
 .bar {
-  height: 420px;
-  width: 10px;
+  height: 10px;
+  width: 660px;
   background: linear-gradient(270deg, rgba(171, 171, 173, 1) 0%, rgba(132, 132, 132, 1) 100%)
 }
 
 .right {
   position: absolute;
-  bottom: 2px;
+  right: 10px;
   z-index: 10;
 }
 
 .left {
   position: absolute;
-  top: 2px;
+  left: 10px;
   z-index: 10;
 }
 
@@ -113,7 +113,6 @@ footer a:hover {
 
 .plates {
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 1px;
 }
@@ -127,28 +126,25 @@ footer a:hover {
 .result {
   display: flex;
   flex-direction: column;
-  align-items: center;
   text-align: center;
-  transition: transform 0.5s ease;
   flex: 1;
   justify-content: center;
   position: relative;
-}
-
-.result .plate div {
-  transition: transform 0.5s ease;
+  transform: translateX(-45%);
+  margin: 5rem 0;
+  transition: transform 1s ease;
 }
 
 .result .plate {
   padding: 0.1rem;
+  display: flex;
+  align-items: center;
+  width: 26px;
+  justify-content: center;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 680px) {
   .result {
-    transform: rotate(90deg);
-  }
-
-  .result .plate div {
-    transform: rotate(-90deg);
+    transform: translate(0);
   }
 }
