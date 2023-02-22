@@ -1,12 +1,11 @@
-import { gsap } from "gsap";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import Plate, { plates } from "./Plate";
-import UserForm from "./UserForm";
 import Barbell from "./Barbell";
 import Footer from "./Footer";
 import Header from "./Header";
+import Plate, { plates } from "./Plate";
+import UserForm from "./UserForm";
 
 function App() {
   // State used to display error messages to the user
@@ -46,54 +45,61 @@ function App() {
     });
   }
 
+  // Helper function to check if a value is a decimal number
+  function isDecimal(value) {
+    return value.toString().includes(".");
+  }
+
   // Runs everytime userInputs or availablePlates values are changed
   useEffect(() => {
+
     // Prevent decimal numbers
     if (
-      userInputs.totalWeight.includes(".") ||
-      userInputs.barWeight.includes(".")
+      isDecimal(userInputs.totalWeight) ||
+      isDecimal(userInputs.barWeight)
     ) {
-      setError("No decimal please.");
-    } else if (userInputs.totalWeight - userInputs.barWeight >= 0) {
-      calc();
-    } else {
-      setError("Target total weight must be higher than bar weight.");
+      return setError("No decimal please.");
+
     }
-  }, [userInputs, availablePlates]);
+
+    if (userInputs.totalWeight - userInputs.barWeight < 0) {
+      return setError("Target total weight must be higher than bar weight.");
+    }
+
+    calculatePlates();
+
+  }, [userInputs.totalWeight, userInputs.barWeight, availablePlates]);
 
   // Run calculation to determine which plates the user needs to load to reach target total weight
-  function calc() {
+  function calculatePlates() {
     const weightToUse = userInputs.totalWeight - userInputs.barWeight;
-    // Init a value to store the weight that needs to be loaded per side on the barbell
-    let weightPerSide = weightToUse / 2;
+
     // Init an array to store all the plates that needs to be loaded per side on the barbell
-    let platesToUse = [];
+    const platesToUse = [];
 
     // Create a new array containing only available plates that are checked by the user
-    const availableOnly = plates.filter((plate) => {
-      if (availablePlates[plate.weight] === true) {
-        return plate.weight;
-      }
-    });
+    const availableOnly = plates.filter(plate => availablePlates[plate.weight]);
 
+    // Init a value to store the weight that needs to be loaded per side on the barbell
+    let weightPerSide = weightToUse / 2;
     // While there still is some weight to load on a side of the barbell
-    while (weightPerSide > 0) {
-      // Check amongst available plates that are checked by the user
-      // Take all the plates than can fit in weightPerSide value.
-      // Take only the first one (the biggest value)
-      const plate = availableOnly.filter(
-        (plate) => plate.weight <= weightPerSide
-      )[0];
-
+    for (let i = 0; weightPerSide > 0; i++) {
+      let plate = null;
+      for (let j = 0; j < availableOnly.length; j++) {
+        if (availableOnly[j].weight <= weightPerSide) {
+          plate = availableOnly[j];
+          break;
+        }
+      }
       if (!plate) {
         return;
       }
-
       // Add the plate to array
       platesToUse.push(plate);
       // Update weightPerSide to determine whats left to load on the next loop iteration
-      weightPerSide = weightPerSide - plate.weight;
+      weightPerSide -= plate.weight;
     }
+
     // Store calculated plates array into platesToUse
     setPlatesToUse(platesToUse);
     // Set calc state to true
@@ -104,35 +110,28 @@ function App() {
   function handleChange(event) {
     // Reset calc state to false.
     setCalculated(false);
-
     const { value, name } = event.target;
-
-    setUserInputs((previousValue) => ({ ...userInputs, [name]: value }));
+    setUserInputs((previousValue) => ({ ...previousValue, [name]: value }));
   }
 
-  // Creates the right part of the barbell
-  const rightPart = platesToUse.map((plate) => (
-    <Plate
-      key={uuidv4()}
-      color={plate.color}
-      height={plate.height}
-      text={plate.text}
-      weight={plate.weight}
-    />
-  ));
-
-  // Creates the left part of the barbell
-  const leftPart = platesToUse
-    .reverse()
-    .map((plate) => (
+  function createPlates(platesArray) {
+    return platesArray.map((plate) => (
       <Plate
-        key={uuidv4()}
+        key={`plate-${uuidv4()}`}
         color={plate.color}
         height={plate.height}
         text={plate.text}
         weight={plate.weight}
       />
     ));
+  }
+
+  // Creates the right part of the barbell
+  const rightPart = createPlates(platesToUse);
+
+  // Creates the left part of the barbell
+  const reversedPlatesToUse = [...platesToUse].reverse();
+  const leftPart = createPlates(reversedPlatesToUse);
 
   // Puts everything together to render the page
   // Displays barbell only if calc was performed correctly
@@ -153,8 +152,8 @@ function App() {
 
       {calculated ? (
         <Barbell
-          leftPart={leftPart}
-          rightPart={rightPart}
+          leftPlates={leftPart}
+          rightPlates={rightPart}
           calculated={calculated}
         />
       ) : (

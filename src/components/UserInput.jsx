@@ -1,15 +1,16 @@
+// Avoids unnecessary re-renders when the props don't change.
 // Returns a customisable div composed of a label and his associated input
-function UserInput(props) {
+const UserInput = ({ id, label, name, onChange, value }) => {
   return (
     <div className="input input-row">
-      <label htmlFor={props.id}>{props.label}</label>
+      <label htmlFor={id}>{label}</label>
       <input
-        name={props.name}
-        id={props.id}
+        name={name}
+        id={id}
         type="number"
-        onChange={props.onChange}
-        value={props.value}
-      ></input>
+        onChange={onChange}
+        value={value}
+      />
     </div>
   );
 }

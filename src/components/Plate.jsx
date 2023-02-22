@@ -13,17 +13,17 @@ const plates = [
 ];
 
 // Return a plate component with specific style corresponding to his weight
-function Plate(props) {
+function Plate({ weight, color, height, text }) {
   return (
     <div
       className="plate"
       style={{
-        backgroundColor: props.color,
-        height: props.height,
-        color: props.text
+        backgroundColor: color,
+        height: height,
+        color: text
       }}
     >
-      <div>{props.weight}</div>
+      <div>{weight}</div>
     </div>
   );
 }

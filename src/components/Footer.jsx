@@ -1,12 +1,20 @@
 function Footer() {
   const currentYear = new Date().getFullYear();
+  const startYear = 2022;
 
   // Project created in 2022
   // Conditional render depending on current year
+  const renderYearRange = () => {
+    if (currentYear === startYear) {
+      return startYear;
+    }
+    return `${startYear}-${currentYear}`;
+  };
+
   return (
     <footer>
-      ©{currentYear === 2022 ? currentYear : "2022-" + currentYear}, <a href="https://github.com/Julien-B-py">Julien
-      BEAUJOIN <i className="fab fa-github"></i></a>
+      ©{renderYearRange()}, <a href="https://github.com/Julien-B-py">Julien
+        BEAUJOIN <i className="fab fa-github"></i></a>
     </footer>
   );
 }

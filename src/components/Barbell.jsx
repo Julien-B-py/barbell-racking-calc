@@ -1,30 +1,26 @@
 import { gsap } from "gsap";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-
-// Returns the corresponding barbell calculated from user inputs
-function Barbell(props) {
-  // Targeting elements
-  const barRef = useRef();
-  // Targeting descendant elements
+function animateBarbell(barRef) {
   const q = gsap.utils.selector(barRef);
-  // Store the timeline in a ref
-  const tl = useRef();
+  gsap.timeline()
+    .from(q(".bar"), { autoAlpha: 0, scale: 0 })
+    .from(q(".right .plate"), { xPercent: 200, stagger: 0.1 })
+    .from(q(".left .plate"), { xPercent: -200, stagger: -0.1 }, "<");
+}
 
-  // Animates bar and weights everytime calc function is performed
-  useLayoutEffect(() => {
-    tl.current = gsap
-      .timeline()
-      .from(q(".bar"), { autoAlpha: 0, scale: 0 })
-      .from(q(".right .plate"), { xPercent: 200, stagger: 0.1 })
-      .from(q(".left .plate"), { xPercent: -200, stagger: -0.1 }, "<");
-  }, [props.calculated]);
+function Barbell({ leftPlates, rightPlates, calculated }) {
+  const barRef = useRef();
+
+  useEffect(() => {
+    animateBarbell(barRef.current);
+  }, [calculated]);
 
   return (
     <div className="result" ref={barRef}>
-      <div className="plates left">{props.leftPart}</div>
+      <div className="plates left">{leftPlates}</div>
       <div className="bar"></div>
-      <div className="plates right">{props.rightPart}</div>
+      <div className="plates right">{rightPlates}</div>
     </div>
   );
 }
